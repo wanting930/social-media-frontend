@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 
-const emit = defineEmits(['backToLogin'])
+const emit = defineEmits(['backToLogin', 'goToArticles'])
 
 const avatarInputRef = ref(null)
 
@@ -314,6 +314,10 @@ const handleKeydown = (event) => {
           <button type="button" class="back-link" @click="emit('backToLogin')">
             返回登入
           </button>
+          <span class="divider"> | </span>
+          <button type="button" class="back-link" @click="emit('goToArticles')">
+            回到文章瀏覽頁面
+          </button>
         </p>
       </div>
     </div>
@@ -341,7 +345,6 @@ const handleKeydown = (event) => {
   width: 100%;
   max-width: 450px;
   padding: 30px;
-  my: auto;
 }
 
 .register-header {
@@ -555,6 +558,10 @@ const handleKeydown = (event) => {
 
 .back-link:hover {
   color: #764ba2;
+}
+
+.divider {
+  color: #ccc;
 }
 
 /* 響應式設計 */

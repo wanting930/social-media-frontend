@@ -4,7 +4,7 @@ import Login from './components/Login.vue'
 import Register from './components/Register.vue'
 import Articles from './components/Articles.vue'
 
-const currentPage = ref('login')
+const currentPage = ref('articles')
 
 const goToRegister = () => {
   currentPage.value = 'register'
@@ -25,9 +25,14 @@ const goToArticles = () => {
       v-if="currentPage === 'login'"
       @goToRegister="goToRegister"
       @loginSuccess="goToArticles"
+      @goToArticles="goToArticles"
     />
-    <Register v-else-if="currentPage === 'register'" @backToLogin="goToLogin" />
-    <Articles v-else-if="currentPage === 'articles'" />
+    <Register
+      v-else-if="currentPage === 'register'"
+      @backToLogin="goToLogin"
+      @goToArticles="goToArticles"
+    />
+    <Articles v-else-if="currentPage === 'articles'" @goToLogin="goToLogin" />
   </div>
 </template>
 

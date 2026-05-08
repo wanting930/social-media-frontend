@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 
-const emit = defineEmits(['goToRegister', 'loginSuccess'])
+const emit = defineEmits(['goToRegister', 'loginSuccess', 'goToArticles'])
 
 const phoneNumber = ref('')
 const password = ref('')
@@ -57,18 +57,28 @@ const handleLogin = async () => {
 
     const data = await response.json()
 
-    if (response.ok) {
+    if (response.ok && data.rtnCode === '0000' && data.data) {
       // 清空表單
       phoneNumber.value = ''
       password.value = ''
       // 儲存 token 到 localStorage
-      if (data.token) {
-        localStorage.setItem('authToken', data.token)
+      const token = data.data.token
+      if (token) {
+        localStorage.setItem('authToken', token)
       }
+      // 可選：儲存使用者資料以便後續使用
+      localStorage.setItem('userInfo', JSON.stringify({
+        userId: data.data.userId,
+        userName: data.data.userName,
+        email: data.data.email,
+        phone: data.data.phone,
+        coverImage: data.data.coverImage,
+        biography: data.data.biography
+      }))
       isLoading.value = false
       emit('loginSuccess')
     } else {
-      alert(`登入失敗: ${data.message || '手機號碼或密碼錯誤'}`)
+      alert(`登入失敗: ${data.rtnMsg || data.message || '手機號碼或密碼錯誤'}`)
       isLoading.value = false
     }
   } catch (error) {
@@ -143,6 +153,8 @@ const handleKeydown = (event) => {
       <!-- 額外選項 -->
       <div class="login-footer">
         <a href="#" class="link" @click.prevent="emit('goToRegister')">註冊帳戶</a>
+        <span class="divider">|</span>
+        <a href="#" class="link" @click.prevent="emit('goToArticles')">回到文章</a>
       </div>
     </div>
   </div>
