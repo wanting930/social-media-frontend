@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 
-const emit = defineEmits(['goToRegister'])
+const emit = defineEmits(['goToRegister', 'loginSuccess'])
 
 const phoneNumber = ref('')
 const password = ref('')
@@ -58,16 +58,15 @@ const handleLogin = async () => {
     const data = await response.json()
 
     if (response.ok) {
-      alert(`登入成功！`)
       // 清空表單
       phoneNumber.value = ''
       password.value = ''
-      // 這裡可以保存 token 到 localStorage
+      // 儲存 token 到 localStorage
       if (data.token) {
         localStorage.setItem('authToken', data.token)
       }
       isLoading.value = false
-      // 跳轉到首頁或其他頁面 (可根據實際需求修改)
+      emit('loginSuccess')
     } else {
       alert(`登入失敗: ${data.message || '手機號碼或密碼錯誤'}`)
       isLoading.value = false
