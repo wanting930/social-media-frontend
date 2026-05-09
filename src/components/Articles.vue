@@ -121,6 +121,32 @@ const formatDateTime = (dateString) => {
   })
 }
 
+const isPostOwner = (post) => {
+  if (!userInfo.value) return false
+
+  const currentUserId = userInfo.value.userId ?? userInfo.value.id ?? userInfo.value._id
+  const currentUserPhone = userInfo.value.phone
+  const currentUserName = userInfo.value.userName ?? userInfo.value.name
+
+  const postOwnerId = post.userId ?? post.user_id ?? post.authorId ?? post.author_id ?? post.creatorId ?? post.creator_id ?? post.ownerId ?? post.owner_id
+  const postOwnerPhone = post.phone ?? post.userPhone ?? post.authorPhone ?? post.ownerPhone
+  const postOwnerName = post.userName ?? post.author ?? post.ownerName
+
+  if (currentUserId != null && postOwnerId != null) {
+    return String(postOwnerId) === String(currentUserId)
+  }
+
+  if (currentUserPhone != null && postOwnerPhone != null) {
+    return String(currentUserPhone) === String(postOwnerPhone)
+  }
+
+  if (currentUserName != null && postOwnerName != null) {
+    return String(currentUserName) === String(postOwnerName)
+  }
+
+  return false
+}
+
 onMounted(() => {
   fetchPosts()
 })
@@ -165,8 +191,6 @@ const editPost = (post) => {
 const handleEditImageUpload = async (event) => {
   const file = event.target.files?.[0]
   if (!file) {
-    editPostData.imageFile = null
-    editPostData.imagePreview = editingPost.value?.image || ''
     return
   }
 
@@ -262,7 +286,6 @@ const deletePost = async (post) => {
       throw new Error(result.rtnMsg || '刪除失敗，請稍後重試')
     }
 
-    // 刪除成功後重新載入文章列表
     await fetchPosts()
   } catch (err) {
     console.error('刪除失敗:', err)
@@ -461,7 +484,7 @@ const createPost = async () => {
               <div class="post-actions">
                 <div class="post-time">{{ formatDateTime(post.createdAt) }}</div>
                 <button
-                  v-if="post.userId === userInfo?.userId"
+                  v-if="isPostOwner(post)"
                   type="button"
                   class="edit-post-btn"
                   @click="editPost(post)"
@@ -469,7 +492,7 @@ const createPost = async () => {
                   編輯
                 </button>
                 <button
-                  v-if="post.userId === userInfo?.userId"
+                  v-if="isPostOwner(post)"
                   type="button"
                   class="delete-post-btn"
                   @click="deletePost(post)"
@@ -505,9 +528,6 @@ const createPost = async () => {
               </div>
               <div v-else class="comment-login-prompt">
                 <p>登入後即可在此留言。</p>
-                <button type="button" class="comment-login-btn" @click="emit('goToLogin')">
-                  前往登入
-                </button>
               </div>
 
               <div class="comment-list">
@@ -557,6 +577,8 @@ const createPost = async () => {
   border-radius: 18px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
   padding: 36px;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .articles-header {
@@ -573,6 +595,42 @@ const createPost = async () => {
   display: flex;
   gap: 12px;
   align-items: center;
+}
+
+.post-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.edit-post-btn,
+.delete-post-btn {
+  padding: 4px 10px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.edit-post-btn {
+  background: #eef2ff;
+  color: #4f7cff;
+  border-color: #d1d7ee;
+}
+
+.edit-post-btn:hover {
+  background: #e4ebff;
+}
+
+.delete-post-btn {
+  background: #fff0f0;
+  color: #e45656;
+  border-color: #ffd1d1;
+}
+
+.delete-post-btn:hover {
+  background: #ffe2e2;
 }
 
 .create-post-btn {
@@ -865,40 +923,10 @@ const createPost = async () => {
   font-weight: 500;
 }
 
-.post-actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.edit-post-btn {
-  padding: 4px 8px;
-  background: #f0f4ff;
-  color: #4f7cff;
-  border: 1px solid #d1d7ee;
-  border-radius: 6px;
+.post-time {
   font-size: 12px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.edit-post-btn:hover {
-  background: #e3e9ff;
-}
-
-.delete-post-btn {
-  padding: 4px 8px;
-  background: #fff0f0;
-  color: #ff4757;
-  border: 1px solid #ffd1d1;
-  border-radius: 6px;
-  font-size: 12px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.delete-post-btn:hover {
-  background: #ffeaea;
+  color: #888;
+  font-weight: 500;
 }
 
 /* 文章內容 */
