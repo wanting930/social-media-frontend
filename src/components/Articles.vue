@@ -151,8 +151,14 @@ onMounted(() => {
   fetchPosts()
 })
 
-const handleImageError = (event) => {
-  event.target.style.display = 'none'
+const isSafeImageUrl = (url) => {
+  if (!url) return false
+  try {
+    const parsedUrl = new URL(url)
+    return parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:' || url.startsWith('data:image/')
+  } catch {
+    return url.startsWith('data:image/')
+  }
 }
 
 const handleImageUpload = async (event) => {
@@ -505,7 +511,7 @@ const createPost = async () => {
             <div class="article-content">
               <p class="content-text">{{ post.content }}</p>
 
-              <div v-if="post.image && post.image.startsWith('data:image')" class="content-image">
+              <div v-if="post.image && isSafeImageUrl(post.image)" class="content-image">
                 <img :src="post.image" :alt="`文章 ${post.postId} 的圖片`" @error="handleImageError" />
               </div>
             </div>
