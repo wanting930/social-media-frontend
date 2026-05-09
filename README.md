@@ -1,37 +1,39 @@
-# social-media-platform
+# 社交媒體平台 (Social Media Platform)
 
-This template should help get you started developing with Vue 3 in Vite.
+一個基於 Vue 3 + Vite 的前端社交媒體專案，提供用戶註冊、登錄、發文、評論等功能。
 
-## Recommended IDE Setup
+## 環境要求
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- **Node.js**: 18+
+- **npm**: 9+（或使用 pnpm/yarn）
+- **Vue**: 3
+- **Vite**
+- **瀏覽器**: 支援現代 ES 模組的瀏覽器，如 Chrome、Edge、Firefox、Safari
+- **後端 API**: 本專案預設串接 `http://localhost:8080`
 
-## Recommended Browser Setup
+## 技術棧
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+- Vue 3
+- Vite
+- JavaScript
+- Fetch API
+- CSS
 
-## Customize configuration
+## 安裝與執行
 
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
+安裝相依套件：
 
 ```sh
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+本機開發模式啟動：
 
 ```sh
 npm run dev
 ```
 
-### Compile and Minify for Production
+編譯打包（生產環境）：
 
 ```sh
 npm run build
